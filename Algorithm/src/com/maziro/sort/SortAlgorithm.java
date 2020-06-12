@@ -36,7 +36,7 @@ public class SortAlgorithm {
         if (array == null || array.length < 1) {
             return;
         }
-        for (int i = 0; i < array.length - 1; i ++) {
+        for (int i = 0; i < array.length - 1; i++) {
             for (int j = i + 1; j < array.length; j++) {
                 if (array[i] > array[j]) {
                     swapArray(array, i, j);
@@ -54,8 +54,38 @@ public class SortAlgorithm {
             return;
         }
         for (int i = 1; i < array.length; i++) {
-            for (int j = 0; j < i; j++) {
-//                if (array[i])
+            int index = i - 1;
+            int value = array[i];
+            while (index >= 0 && array[index] > value) {
+                array[index + 1] = array[index];
+                index--;
+            }
+            if (index + 1 != i) {
+                array[index + 1] = value;
+            }
+        }
+    }
+
+    /**
+     * shellSort
+     */
+    public static void shellSort(int[] arr) {
+        if (arr == null || arr.length < 1) {
+            return;
+        }
+        for (int gap = arr.length; gap > 0; gap /= 2) {
+            for (int i = gap; i < arr.length; i++) {
+                int j = i - gap;
+                int value = arr[i];
+                if (value < arr[j]) {
+                    while (j >= 0 && arr[j] > value) {
+                        arr[j + gap] = arr[j];
+                        j -= gap;
+                    }
+                    if (j + gap != i) {
+                        arr[j + gap] = value;
+                    }
+                }
             }
         }
     }

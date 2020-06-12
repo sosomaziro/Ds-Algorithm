@@ -54,7 +54,7 @@ public class ShellSort {
 			//System.out.println("希尔排序第" + (++count) + "轮 =" + Arrays.toString(arr));
 		}
 		
-		/*
+
 		
 		// 希尔排序的第1轮排序
 		// 因为第1轮排序，是将10个数据分成了 5组
@@ -104,7 +104,7 @@ public class ShellSort {
 		}
 
 		System.out.println("希尔排序3轮后=" + Arrays.toString(arr));//
-		*/
+
 	}
 	
 	//对交换式的希尔排序进行优化->移位法
