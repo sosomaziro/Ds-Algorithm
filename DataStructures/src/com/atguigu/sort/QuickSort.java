@@ -1,7 +1,6 @@
 package com.atguigu.sort;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 public class QuickSort {
@@ -38,7 +37,7 @@ public class QuickSort {
 		int temp = 0; //临时变量，作为交换时使用
 		//while循环的目的是让比pivot 值小放到左边
 		//比pivot 值大放到右边
-		while( l < r) { 
+		while( l < r) {
 			//在pivot的左边一直找,找到大于等于pivot值,才退出
 			while( arr[l] < pivot) {
 				l += 1;
@@ -52,12 +51,12 @@ public class QuickSort {
 			if( l >= r) {
 				break;
 			}
-			
+
 			//交换
 			temp = arr[l];
 			arr[l] = arr[r];
 			arr[r] = temp;
-			
+
 			//如果交换完后，发现这个arr[l] == pivot值 相等 r--， 前移
 			if(arr[l] == pivot) {
 				r -= 1;
@@ -67,7 +66,7 @@ public class QuickSort {
 				l += 1;
 			}
 		}
-		
+
 		// 如果 l == r, 必须l++, r--, 否则为出现栈溢出
 		if (l == r) {
 			l += 1;
