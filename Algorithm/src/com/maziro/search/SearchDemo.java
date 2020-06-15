@@ -20,5 +20,7 @@ public class SearchDemo {
         System.out.println("二分查找归并：" + SearchAlgorithm.binarySearchMerge(a, searchElement));
 
         System.out.println("二分查找归并 返回所有：" + Arrays.toString(SearchAlgorithm.binarySearchAll(a, searchElement)));
+
+        System.out.println("斐波那契查找：" + SearchAlgorithm.fibonacciSearch(a, searchElement));
     }
 }

@@ -1,5 +1,7 @@
 package com.maziro.search;
 
+import java.util.Arrays;
+
 public class SearchAlgorithm {
 
     /**
@@ -114,19 +116,69 @@ public class SearchAlgorithm {
     /**
      * fibonacci查找算法
      */
-    public static int fibonacciSearchAll(int[] arr) {
+    public static int fibonacciSearch(int[] arr, int element) {
         if (checkArray(arr))
             return -1;
         // 构建数列
+        int[] fib = getFibonacci();
 
         // 创建临时数列，长度为斐波那契数列的一个数，使用最后一位补齐空白位
+        int k = 0;
+        while (arr.length > fib[k]) {
+            k++;
+        }
+        int[] temp =  Arrays.copyOf(arr, fib[k]);
+        int i = arr.length;
+        while (i < fib[k] - 1) {
+            temp[i] = temp[arr.length - 1];
+            i++;
+        }
 
         // 迭代查找
+        int l = 0, r = arr.length - 1;
+        while (l <= r) {
+            int mid = l + fib[k - 1] - 1;
+            if (temp[mid] > element) {
+                // 下一个 mid = l + fib[k - 2] - 1
+                k--;
+                r = mid - 1;
+            } else if (temp[mid] < element) {
+                // 下一个 mid = (mid + 1) + fib[k - 3] - 1
+                k -= 2;
+                l = mid + 1;
+            } else {
+                if (mid <= r) {
+                    return mid;
+                } else {
+                    // 匹配值为最后一位，在数组之外的补齐部分搜到匹配，返回最后一位
+                    return r;
+                }
+            }
+        }
 
         return -1;
+    }
+
+    private static int[] getFibonacci() {
+        int fibSize = 45; // int 极限到第45个
+        int[] fib = new int[fibSize];
+        fib[0] = 1;
+        fib[1] = 1;
+        for (int i = 2; i < fibSize; i++) {
+            fib[i] = fib[i - 1] + fib[i - 2];
+        }
+        return fib;
     }
 
     public static boolean checkArray(int[] arr) {
         return arr == null || arr.length < 1;
     }
 }
+
+
+
+
+
+
+
+
