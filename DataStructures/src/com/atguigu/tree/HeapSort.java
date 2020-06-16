@@ -1,8 +1,6 @@
 package com.atguigu.tree;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 public class HeapSort {
 
@@ -10,23 +8,18 @@ public class HeapSort {
 		//要求将数组进行升序排序
 		//int arr[] = {4, 6, 8, 5, 9};
 		// 创建要给80000个的随机的数组
-		int[] arr = new int[8000000];
-		for (int i = 0; i < 8000000; i++) {
-			arr[i] = (int) (Math.random() * 8000000); // 生成一个[0, 8000000) 数
+		int[] arr = new int[20];
+		for (int i = 0; i < 20; i++) {
+			arr[i] = (int) (Math.random() * 20); // 生成一个[0, 8000000) 数
 		}
 
-		System.out.println("排序前");
-		Date data1 = new Date();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String date1Str = simpleDateFormat.format(data1);
-		System.out.println("排序前的时间是=" + date1Str);
-		
+
+		long start = System.currentTimeMillis();
+		System.out.println(Arrays.toString(arr));
 		heapSort(arr);
-		
-		Date data2 = new Date();
-		String date2Str = simpleDateFormat.format(data2);
-		System.out.println("排序前的时间是=" + date2Str);
-		//System.out.println("排序后=" + Arrays.toString(arr));
+		System.out.println(Arrays.toString(arr));
+		System.out.println("快速排序---运行时间:" + (System.currentTimeMillis() - start));
+
 	}
 
 	//编写一个堆排序的方法
