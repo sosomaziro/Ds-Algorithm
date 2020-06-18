@@ -20,7 +20,7 @@ public class BinarySortTree {
         System.out.println(node);
 
         tree.printTree();
-        tree.delete(5);
+//        tree.delete(5);
         tree.printTree();
     }
 
@@ -52,7 +52,7 @@ public class BinarySortTree {
      */
     public void add(int value) {
         if (root == null) {
-            root = new Node(value, null);
+            root = new Node(value);
             count++;
         } else {
             addNode(root, value);
@@ -62,13 +62,13 @@ public class BinarySortTree {
     private void addNode(Node node, int value) {
         if (value < node.value) {
             if (node.left == null) {
-                node.left = new Node(value, node);
+                node.left = new Node(value);
             } else {
                 addNode(node.left, value);
             }
         } else {
             if (node.right == null) {
-                node.right = new Node(value, node);
+                node.right = new Node(value);
             } else {
                 addNode(node.right, value);
             }
@@ -143,51 +143,51 @@ public class BinarySortTree {
     /**
      * 删除节点
      */
-    public void delete(int value) {
-        Node node = find(value);
-        delete(node);
-    }
+//    public void delete(int value) {
+//        Node node = find(value);
+//        delete(node);
+//    }
 
-
-    public void delete(Node node) {
-        if (node == null) {
-            return;
-        }
-        if (node.left == null && node.right == null) {
-            // 两边子节点都为空 直接删除节点
-            if (node.parent == null) {
-                root = null;
-            } else if (node.parent.left.value == node.value) {
-                node.parent.left = null;
-            } else {
-                node.parent.right = null;
-            }
-        } else if (node.left != null && node.right != null) {
-            // 交换当前节点 和他的右子节点分支的最左节点
-            Node left = findLeft(node.right);
-            node.swapValue(left);
-            // 删除被替换节点
-            delete(left);
-        } else {
-            if (node.left != null) {
-                if (root == node) {
-                    root = node.left;
-                } else if (node.leftOrRight() == Node.LEFT) {
-                    node.parent.left = node.left;
-                } else {
-                    node.parent.right = node.left;
-                }
-            } else {
-                if (root == node) {
-                    root = node.right;
-                } else if (node.leftOrRight() == Node.LEFT) {
-                    node.parent.left = node.right;
-                } else {
-                    node.parent.right = node.right;
-                }
-            }
-        }
-    }
+//
+//    public void delete(Node node) {
+//        if (node == null) {
+//            return;
+//        }
+//        if (node.left == null && node.right == null) {
+//            // 两边子节点都为空 直接删除节点
+//            if (node.parent == null) {
+//                root = null;
+//            } else if (node.parent.left.value == node.value) {
+//                node.parent.left = null;
+//            } else {
+//                node.parent.right = null;
+//            }
+//        } else if (node.left != null && node.right != null) {
+//            // 交换当前节点 和他的右子节点分支的最左节点
+//            Node left = findLeft(node.right);
+//            node.swapValue(left);
+//            // 删除被替换节点
+//            delete(left);
+//        } else {
+//            if (node.left != null) {
+//                if (root == node) {
+//                    root = node.left;
+//                } else if (node.leftOrRight() == Node.LEFT) {
+//                    node.parent.left = node.left;
+//                } else {
+//                    node.parent.right = node.left;
+//                }
+//            } else {
+//                if (root == node) {
+//                    root = node.right;
+//                } else if (node.leftOrRight() == Node.LEFT) {
+//                    node.parent.left = node.right;
+//                } else {
+//                    node.parent.right = node.right;
+//                }
+//            }
+//        }
+//    }
 
     private Node findLeft(Node node) {
         if (node.left == null) {

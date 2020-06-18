@@ -1,5 +1,7 @@
 package com.maziro.tree;
 
+import com.maziro.sort.SortDemo;
+
 /**
  * inventors
  * Adelson-Velsky and Landis
@@ -7,10 +9,10 @@ package com.maziro.tree;
  */
 public class AVLTree {
     public static void main(String[] args) {
-        int[] a = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+//        int[] a = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        int[] a = SortDemo.getRandomArray(20000);
         AVLTree tree = new AVLTree();
         for (int i : a) {
-            System.out.println("add " + i);
             tree.add(i);
         }
         System.out.println("root = " + tree.root);
@@ -28,7 +30,8 @@ public class AVLTree {
         System.out.println("right = " + tree.getHeight(tree.root.right));
     }
 
-    private Node root;
+    Node root;
+    long size;
 
     public AVLTree() {
     }
@@ -71,6 +74,7 @@ public class AVLTree {
      * @param value
      */
     public void add(int value) {
+        size++;
         add(root, value);
     }
 
@@ -79,16 +83,18 @@ public class AVLTree {
             root = new Node(value);
             return;
         }
-        if (node.value > value) {
+        if (node.value == value) {
+            size--;
+            return;
+        } else if (node.value > value) {
             if (node.left == null) {
-                node.setChild(Node.LEFT, new Node(value));
-
+                node.left = new Node(value);
             } else {
                 add(node.left, value);
             }
         } else {
             if (node.right == null) {
-                node.setChild(Node.RIGHT, new Node(value));
+                node.right = new Node(value);
             } else {
                 add(node.right, value);
             }
@@ -130,12 +136,12 @@ public class AVLTree {
      */
     public void leftRotate(Node node) {
         Node toLeft = new Node(node.value);
-        toLeft.setChild(Node.LEFT, node.left);
-        node.setChild(Node.LEFT, toLeft);
+        toLeft.left = node.left;
+        node.left = toLeft;
         if (node.right != null) {
-            toLeft.setChild(Node.RIGHT, node.right.left);
+            toLeft.right = node.right.left;
             node.value = node.right.value;
-            node.setChild(Node.RIGHT, node.right.right);
+            node.right = node.right.right;
         }
     }
 
@@ -146,12 +152,12 @@ public class AVLTree {
      */
     public void rightRotate(Node node) {
         Node toRight = new Node(node.value);
-        toRight.setChild(Node.RIGHT, node.right);
+        toRight.right = node.right;
         node.right = toRight;
         if (node.left != null) {
-            toRight.setChild(Node.LEFT, node.left.right);
+            toRight.left = node.left.right;
             node.value = node.left.value;
-            node.setChild(Node.LEFT, node.left.left);
+            node.left = node.left.left;
         }
     }
 
@@ -159,45 +165,67 @@ public class AVLTree {
      * 删除
      */
     public void remove(int value) {
-        remove(root, value);
+        remove(root, null, value);
     }
 
-    private void remove(Node node, int value) {
+    private void remove(Node node, Node parent, int value) {
         if (node == null) {
             return;
         }
         if (node.value > value) {
-            remove(node.left, value);
+            remove(node.left, node, value);
         } else if (node.value == value) {
-            remove(node);
+            remove(node, parent);
+            size--;
         } else {
-            remove(node.right, value);
+            remove(node.right, node, value);
         }
         balanceCheck(node);
     }
 
-    private void remove(Node node) {
+    private void remove(Node node, Node parent) {
         if (root.left == null && root.right == null) {
             root = null;
-        }
-        if (node.left != null && node.right != null) {
+        } else if (node.left != null && node.right != null) {
             Node min = getMin(node.right);
-            node.swapValue(min);
-            remove(min);
+            int value = min.value;
+            remove(min, getParent(node, min));
+            node.value = value;
         } else {
             if (node.left != null) {
                 if (node == root) {
                     root = root.left;
                 } else {
-                    node.parent.setChild(node.leftOrRight(), node.left);
+                    if (parent.left == node) {
+                        parent.left = node.left;
+                    } else {
+                        parent.right = node.left;
+                    }
                 }
             } else {
                 if (node == root) {
                     root = root.right;
                 } else {
-                    node.parent.setChild(node.leftOrRight(), node.right);
+                    if (parent.left == node) {
+                        parent.left = node.right;
+                    } else {
+                        parent.right = node.right;
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * 获取父节点
+     */
+    private Node getParent(Node node, Node target) {
+        if (node.left == target || node.right == target) {
+            return node;
+        } else if (node.value > target.value) {
+            return getParent(node.left, target);
+        } else {
+            return getParent(node.right, target);
         }
     }
 

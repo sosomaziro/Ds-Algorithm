@@ -1,6 +1,11 @@
 package com.maziro.tree;
 
 
+import com.maziro.sort.SortDemo;
+
+import java.util.Arrays;
+import java.util.HashSet;
+
 @SuppressWarnings("ALL")
 public class AVLTreeDemo {
 
@@ -8,23 +13,46 @@ public class AVLTreeDemo {
         //int[] arr = {4,3,6,5,7,8};
         //int[] arr = { 10, 12, 8, 9, 7, 6 };
 //        int[] arr = { 10, 11, 7, 6, 8, 9 };
-        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] ori = SortDemo.getRandomArray(20000);
+        HashSet<Integer> collect = Arrays.stream(ori).collect(HashSet::new, HashSet::add, HashSet::addAll);
+        Integer[] a = new Integer[collect.size()];
+        collect.toArray(a);
+
+        int[] r = SortDemo.getRandomArray(10000);
+        AVLTree tree = new AVLTree();
+        for (int i : a) {
+            tree.add(i);
+        }
+        System.out.println("root = " + tree.root);
+        System.out.println("size = " + tree.size);
+        for (int i : r) {
+            tree.remove(i);
+        }
+        System.out.println("root = " + tree.root);
+        System.out.println("size = " + tree.size);
+        System.out.println("height = " + tree.getHeight(tree.root));
+        System.out.println("left = " + tree.getHeight(tree.root.left));
+        System.out.println("right = " + tree.getHeight(tree.root.right));
+
+
+        System.out.println("================================");
+
         //创建一个 AVLTree对象
         AVLTreeDemo avlTree = new AVLTreeDemo();
-        //添加结点
-        for (int i = 0; i < arr.length; i++) {
-            avlTree.add(arr[i]);
+        for (int i : a) {
+            avlTree.add(i);
         }
-        avlTree.remove(1);
-        avlTree.remove(2);
-
-
+        System.out.println("root = " + avlTree.root.e);
+        System.out.println("size = " + avlTree.size);
+        for (int i : r) {
+            avlTree.remove(i);
+        }
         //遍历
-        System.out.println("中序遍历");
-
-        System.out.println("在平衡处理~~");
-        System.out.println("left height:" + avlTree.getHeight(avlTree.root.left));
-        System.out.println("right height:" + avlTree.getHeight(avlTree.root.right));
+        System.out.println("root = " + avlTree.root.e);
+        System.out.println("size = " + avlTree.size);
+        System.out.println("height = " + avlTree.getHeight(avlTree.root));
+        System.out.println("left height = " + avlTree.getHeight(avlTree.root.left));
+        System.out.println("right height = " + avlTree.getHeight(avlTree.root.right));
     }
 
     /**
