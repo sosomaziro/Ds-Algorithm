@@ -176,7 +176,6 @@ public class AVLTree {
             remove(node.left, node, value);
         } else if (node.value == value) {
             remove(node, parent);
-            size--;
         } else {
             remove(node.right, node, value);
         }
@@ -185,6 +184,7 @@ public class AVLTree {
 
     private void remove(Node node, Node parent) {
         if (root.left == null && root.right == null) {
+            size--;
             root = null;
         } else if (node.left != null && node.right != null) {
             Node min = getMin(node.right);
@@ -192,6 +192,7 @@ public class AVLTree {
             remove(min, getParent(node, min));
             node.value = value;
         } else {
+            size--;
             if (node.left != null) {
                 if (node == root) {
                     root = root.left;
