@@ -7,8 +7,25 @@ package com.maziro.tree;
  */
 public class AVLTree {
     public static void main(String[] args) {
-
+        int[] a = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         AVLTree tree = new AVLTree();
+        for (int i : a) {
+            System.out.println("add " + i);
+            tree.add(i);
+        }
+        System.out.println("root = " + tree.root);
+        tree.remove(13);
+        tree.remove(12);
+        tree.remove(14);
+        tree.remove(10);
+        tree.remove(11);
+        tree.remove(16);
+        tree.remove(15);
+        tree.remove(9);
+        System.out.println("root = " + tree.root);
+        System.out.println("height = " + tree.getHeight(tree.root));
+        System.out.println("left = " + tree.getHeight(tree.root.left));
+        System.out.println("right = " + tree.getHeight(tree.root.right));
     }
 
     private Node root;
@@ -53,48 +70,53 @@ public class AVLTree {
      *
      * @param value
      */
-    public Node add(int value) {
-        return add(root, value);
+    public void add(int value) {
+        add(root, value);
     }
 
-    private Node add(Node node, int value) {
-        Node result;
-        if (node == null) {
-            result = null;
-        } else if (node.value > value) {
+    private void add(Node node, int value) {
+        if (root == null) {
+            root = new Node(value);
+            return;
+        }
+        if (node.value > value) {
             if (node.left == null) {
-                node.left = new Node(value, node);
-                result = node.left;
+                node.setChild(Node.LEFT, new Node(value));
+
             } else {
-                result = add(node.left, value);
+                add(node.left, value);
             }
         } else {
             if (node.right == null) {
-                node.right = new Node(value, node);
-                result = node.right;
+                node.setChild(Node.RIGHT, new Node(value));
             } else {
-                result = add(node.right, value);
+                add(node.right, value);
             }
         }
+        balanceCheck(node);
+    }
 
+    private void balanceCheck(Node node) {
+        if (node == null) {
+            return;
+        }
         //计算平衡因子
         int balanceFactor = getBalanceFactor(node);
         if (balanceFactor > 1) {
-            if (getHeight(node.right.left) > getHeight(node.right.right)) {
-                // 右旋 node.right
-
-            }
-            // 左旋 node
-
-        } else if (balanceFactor < -1) {
-            if (getHeight(node.left.right) > getHeight(node.left.left)) {
+            if (node.left != null && getHeight(node.left.right) > getHeight(node.left.left)) {
                 // 左旋 node.left
-
+                leftRotate(node.left);
             }
             // 右旋 node
-
+            rightRotate(node);
+        } else if (balanceFactor < -1) {
+            if (node.right != null && getHeight(node.right.left) > getHeight(node.right.right)) {
+                // 右旋 node.right
+                rightRotate(node.right);
+            }
+            // 左旋 node
+            leftRotate(node);
         }
-        return result;
     }
 
     private int getBalanceFactor(Node node) {
@@ -107,17 +129,13 @@ public class AVLTree {
      * @param node
      */
     public void leftRotate(Node node) {
-        Node toLeft = new Node(node.value, node);
-        node.left.parent = toLeft;
-        toLeft.left = node.left;
-
-        if (node.right.left != null) {
-            node.right.left.parent = toLeft;
-            toLeft.left = node.right.left;
-        }
-        if (node.right.right != null) {
-            node.right = node.right.right;
-            node.right.right.parent = node;
+        Node toLeft = new Node(node.value);
+        toLeft.setChild(Node.LEFT, node.left);
+        node.setChild(Node.LEFT, toLeft);
+        if (node.right != null) {
+            toLeft.setChild(Node.RIGHT, node.right.left);
+            node.value = node.right.value;
+            node.setChild(Node.RIGHT, node.right.right);
         }
     }
 
@@ -127,14 +145,64 @@ public class AVLTree {
      * @param node
      */
     public void rightRotate(Node node) {
-
+        Node toRight = new Node(node.value);
+        toRight.setChild(Node.RIGHT, node.right);
+        node.right = toRight;
+        if (node.left != null) {
+            toRight.setChild(Node.LEFT, node.left.right);
+            node.value = node.left.value;
+            node.setChild(Node.LEFT, node.left.left);
+        }
     }
 
     /**
      * 删除
      */
     public void remove(int value) {
+        remove(root, value);
+    }
 
+    private void remove(Node node, int value) {
+        if (node == null) {
+            return;
+        }
+        if (node.value > value) {
+            remove(node.left, value);
+        } else if (node.value == value) {
+            remove(node);
+        } else {
+            remove(node.right, value);
+        }
+        balanceCheck(node);
+    }
+
+    private void remove(Node node) {
+        if (root.left == null && root.right == null) {
+            root = null;
+        }
+        if (node.left != null && node.right != null) {
+            Node min = getMin(node.right);
+            node.swapValue(min);
+            remove(min);
+        } else {
+            if (node.left != null) {
+                if (node == root) {
+                    root = root.left;
+                } else {
+                    node.parent.setChild(node.leftOrRight(), node.left);
+                }
+            } else {
+                if (node == root) {
+                    root = root.right;
+                } else {
+                    node.parent.setChild(node.leftOrRight(), node.right);
+                }
+            }
+        }
+    }
+
+    private Node getMin(Node node) {
+        return node.left == null ? node : getMin(node.left);
     }
 
 }
