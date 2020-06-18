@@ -52,7 +52,7 @@ public class BinarySortTree {
      */
     public void add(int value) {
         if (root == null) {
-            root = new Node(value, null, 0);
+            root = new Node(value, null);
             count++;
         } else {
             addNode(root, value);
@@ -62,13 +62,13 @@ public class BinarySortTree {
     private void addNode(Node node, int value) {
         if (value < node.value) {
             if (node.left == null) {
-                node.left = new Node(value, node, Node.LEFT);
+                node.left = new Node(value, node);
             } else {
                 addNode(node.left, value);
             }
         } else {
             if (node.right == null) {
-                node.right = new Node(value, node, Node.RIGHT);
+                node.right = new Node(value, node);
             } else {
                 addNode(node.right, value);
             }
@@ -157,7 +157,7 @@ public class BinarySortTree {
             // 两边子节点都为空 直接删除节点
             if (node.parent == null) {
                 root = null;
-            } else if (node.parentSide == Node.LEFT) {
+            } else if (node.parent.left.value == node.value) {
                 node.parent.left = null;
             } else {
                 node.parent.right = null;
@@ -172,7 +172,7 @@ public class BinarySortTree {
             if (node.left != null) {
                 if (root == node) {
                     root = node.left;
-                } else if (node.parentSide == Node.LEFT) {
+                } else if (node.leftOrRight() == Node.LEFT) {
                     node.parent.left = node.left;
                 } else {
                     node.parent.right = node.left;
@@ -180,7 +180,7 @@ public class BinarySortTree {
             } else {
                 if (root == node) {
                     root = node.right;
-                } else if (node.parentSide == Node.LEFT) {
+                } else if (node.leftOrRight() == Node.LEFT) {
                     node.parent.left = node.right;
                 } else {
                     node.parent.right = node.right;

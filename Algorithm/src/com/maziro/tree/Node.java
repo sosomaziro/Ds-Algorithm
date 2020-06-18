@@ -8,21 +8,35 @@ public class Node {
     public Node left;
     public Node right;
     public int value;
-    public int parentSide; // 父节点左节点 0 有节点 1
+    public int height;
 
     public Node(int value) {
         this.value = value;
     }
 
-    public Node(int value, Node parent, int parentSide) {
+    public Node(int value, Node parent) {
         this.value = value;
         this.parent = parent;
-        this.parentSide = parentSide;
     }
 
     public void swapValue(Node node) {
         if (node != null) {
             value = node.value;
+        }
+    }
+
+    public int leftOrRight() {
+        return this.parent.left == this ? LEFT : RIGHT;
+    }
+
+    public void setChild(int side, Node child) {
+        if (side == LEFT) {
+            this.left = child;
+        } else {
+            this.right = child;
+        }
+        if (child != null) {
+            child.parent = this;
         }
     }
 
