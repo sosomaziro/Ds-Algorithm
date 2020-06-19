@@ -5,6 +5,7 @@ public class Node {
     public Node left;
     public Node right;
     public int value;
+    // 插入时计算高度最花时间 所以直接记录
     public int height;
 
     public Node(int value) {

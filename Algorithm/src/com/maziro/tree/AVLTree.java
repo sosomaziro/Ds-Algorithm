@@ -53,24 +53,8 @@ public class AVLTree {
         } else if (node.value < value) {
             node.right = add(node.right, value);
         }
-        //计算平衡因子
-        int balanceFactor = getBalanceFactor(node);
-        if (balanceFactor > 1) {
-            if (getBalanceFactor(node.left) < 0) {
-                // 左旋 node.left
-                node.left = leftRotate(node.left);
-            }
-            // 右旋 node
-            return rightRotate(node);
-        } else if (balanceFactor < -1) {
-            if (getBalanceFactor(node.right) > 0) {
-                // 右旋 node.right
-                node.right = rightRotate(node.right);
-            }
-            // 左旋 node
-            return leftRotate(node);
-        }
-        return node;
+        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+        return balanceCheck(node);
     }
 
     //获取某一结点的高度
