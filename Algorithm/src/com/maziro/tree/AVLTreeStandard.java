@@ -1,87 +1,19 @@
 package com.maziro.tree;
 
 
-import com.maziro.sort.SortDemo;
-
-import java.util.Arrays;
-import java.util.HashSet;
-
 @SuppressWarnings("ALL")
-public class AVLTreeDemo {
+public class AVLTreeStandard {
 
-    public static void main(String[] args) {
-        //int[] arr = {4,3,6,5,7,8};
-        //int[] arr = { 10, 12, 8, 9, 7, 6 };
-//        int[] arr = { 10, 11, 7, 6, 8, 9 };
-        int[] ori = SortDemo.getRandomArray(20000);
-        HashSet<Integer> collect = Arrays.stream(ori).collect(HashSet::new, HashSet::add, HashSet::addAll);
-        Integer[] a = new Integer[collect.size()];
-        collect.toArray(a);
+    Node root;
+    int size;
 
-        int[] r = SortDemo.getRandomArray(10000);
-        AVLTree tree = new AVLTree();
-        for (int i : a) {
-            tree.add(i);
-        }
-        System.out.println("root = " + tree.root);
-        System.out.println("size = " + tree.size);
-        for (int i : r) {
-            tree.remove(i);
-        }
-        System.out.println("root = " + tree.root);
-        System.out.println("size = " + tree.size);
-        System.out.println("height = " + tree.getHeight(tree.root));
-        System.out.println("left = " + tree.getHeight(tree.root.left));
-        System.out.println("right = " + tree.getHeight(tree.root.right));
-
-
-        System.out.println("================================");
-
-        //创建一个 AVLTree对象
-        AVLTreeDemo avlTree = new AVLTreeDemo();
-        for (int i : a) {
-            avlTree.add(i);
-        }
-        System.out.println("root = " + avlTree.root.e);
-        System.out.println("size = " + avlTree.size);
-        for (int i : r) {
-            avlTree.remove(i);
-        }
-        //遍历
-        System.out.println("root = " + avlTree.root.e);
-        System.out.println("size = " + avlTree.size);
-        System.out.println("height = " + avlTree.getHeight(avlTree.root));
-        System.out.println("left height = " + avlTree.getHeight(avlTree.root.left));
-        System.out.println("right height = " + avlTree.getHeight(avlTree.root.right));
-    }
-
-    /**
-     * AVLTree是BST，所以节点值必须是可比较的
-     */
-    private class Node {
-        public int e;
-        public Node left;
-        public Node right;
-        public int height;
-
-        public Node(int e) {
-            this.e = e;
-            this.left = null;
-            this.right = null;
-            this.height = 1;
-        }
-    }
-
-    private Node root;
-    private int size;
-
-    public AVLTreeDemo() {
+    public AVLTreeStandard() {
         root = null;
         size = 0;
     }
 
     //获取某一结点的高度
-    private int getHeight(Node node) {
+    int getHeight(Node node) {
         if (node == null) {
             return 0;
         }
@@ -166,9 +98,9 @@ public class AVLTreeDemo {
             size++;
             return new Node(e);
         }
-        if (e < node.e)
+        if (e < node.value)
             node.left = add(node.left, e);
-        else if (e > node.e)
+        else if (e > node.value)
             node.right = add(node.right, e);
         //更新height
         node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
@@ -200,7 +132,7 @@ public class AVLTreeDemo {
         Node node = getNode(root, e);
         if (node != null) {
             root = remove(root, e);
-            return node.e;
+            return node.value;
         }
         return 0;
     }
@@ -208,9 +140,9 @@ public class AVLTreeDemo {
     public Node getNode(Node node, int e) {
         if (node == null) {
             return null;
-        } else if (node.e == e) {
+        } else if (node.value == e) {
             return node;
-        } else if (node.e > e) {
+        } else if (node.value > e) {
             return getNode(node.left, e);
         } else {
             return getNode(node.right, e);
@@ -225,10 +157,10 @@ public class AVLTreeDemo {
         if (node == null)
             return null;
         Node retNode;
-        if (e < node.e) {
+        if (e < node.value) {
             node.left = remove(node.left, e);
             retNode = node;
-        } else if (e > node.e) {
+        } else if (e > node.value) {
             node.right = remove(node.right, e);
             retNode = node;
         } else {   // e.compareTo(node.e) == 0
@@ -250,7 +182,7 @@ public class AVLTreeDemo {
                 // 找到比待删除节点大的最小节点, 即待删除节点右子树的最小节点
                 // 用这个节点顶替待删除节点的位置
                 Node successor = minimum(node.right);
-                successor.right = remove(node.right, successor.e);
+                successor.right = remove(node.right, successor.value);
                 successor.left = node.left;
 
                 node.left = node.right = null;

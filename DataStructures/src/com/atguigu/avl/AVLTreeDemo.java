@@ -12,7 +12,7 @@ public class AVLTreeDemo {
 		AVLTree avlTree = new AVLTree();
 		//添加结点
 		for(int i=0; i < arr.length; i++) {
-			avlTree.add(new Node(arr[i]));
+			avlTree.add(new NodeA(arr[i]));
 		}
 		
 		//遍历
@@ -32,14 +32,14 @@ public class AVLTreeDemo {
 
 // 创建AVLTree
 class AVLTree {
-	private Node root;
+	private NodeA root;
 
-	public Node getRoot() {
+	public NodeA getRoot() {
 		return root;
 	}
 
 	// 查找要删除的结点
-	public Node search(int value) {
+	public NodeA search(int value) {
 		if (root == null) {
 			return null;
 		} else {
@@ -48,7 +48,7 @@ class AVLTree {
 	}
 
 	// 查找父结点
-	public Node searchParent(int value) {
+	public NodeA searchParent(int value) {
 		if (root == null) {
 			return null;
 		} else {
@@ -65,8 +65,8 @@ class AVLTree {
 	 *            传入的结点(当做二叉排序树的根结点)
 	 * @return 返回的 以node 为根结点的二叉排序树的最小结点的值
 	 */
-	public int delRightTreeMin(Node node) {
-		Node target = node;
+	public int delRightTreeMin(NodeA node) {
+		NodeA target = node;
 		// 循环的查找左子节点，就会找到最小值
 		while (target.left != null) {
 			target = target.left;
@@ -83,7 +83,7 @@ class AVLTree {
 			return;
 		} else {
 			// 1.需求先去找到要删除的结点 targetNode
-			Node targetNode = search(value);
+			NodeA targetNode = search(value);
 			// 如果没有找到要删除的结点
 			if (targetNode == null) {
 				return;
@@ -95,7 +95,7 @@ class AVLTree {
 			}
 
 			// 去找到targetNode的父结点
-			Node parent = searchParent(value);
+			NodeA parent = searchParent(value);
 			// 如果要删除的结点是叶子结点
 			if (targetNode.left == null && targetNode.right == null) {
 				// 判断targetNode 是父结点的左子结点，还是右子结点
@@ -140,7 +140,7 @@ class AVLTree {
 	}
 
 	// 添加结点的方法
-	public void add(Node node) {
+	public void add(NodeA node) {
 		if (root == null) {
 			root = node;// 如果root为空则直接让root指向node
 		} else {
@@ -159,12 +159,12 @@ class AVLTree {
 }
 
 // 创建Node结点
-class Node {
+class NodeA {
 	int value;
-	Node left;
-	Node right;
+	NodeA left;
+	NodeA right;
 
-	public Node(int value) {
+	public NodeA(int value) {
 
 		this.value = value;
 	}
@@ -194,7 +194,7 @@ class Node {
 	private void leftRotate() {
 		
 		//创建新的结点，以当前根结点的值
-		Node newNode = new Node(value);
+		NodeA newNode = new NodeA(value);
 		//把新的结点的左子树设置成当前结点的左子树
 		newNode.left = left;
 		//把新的结点的右子树设置成带你过去结点的右子树的左子树
@@ -211,7 +211,7 @@ class Node {
 	
 	//右旋转
 	private void rightRotate() {
-		Node newNode = new Node(value);
+		NodeA newNode = new NodeA(value);
 		newNode.right = right;
 		newNode.left = left.right;
 		value = left.value;
@@ -226,7 +226,7 @@ class Node {
 	 *            希望删除的结点的值
 	 * @return 如果找到返回该结点，否则返回null
 	 */
-	public Node search(int value) {
+	public NodeA search(int value) {
 		if (value == this.value) { // 找到就是该结点
 			return this;
 		} else if (value < this.value) {// 如果查找的值小于当前结点，向左子树递归查找
@@ -251,7 +251,7 @@ class Node {
 	 *            要找到的结点的值
 	 * @return 返回的是要删除的结点的父结点，如果没有就返回null
 	 */
-	public Node searchParent(int value) {
+	public NodeA searchParent(int value) {
 		// 如果当前结点就是要删除的结点的父结点，就返回
 		if ((this.left != null && this.left.value == value) || (this.right != null && this.right.value == value)) {
 			return this;
@@ -275,7 +275,7 @@ class Node {
 
 	// 添加结点的方法
 	// 递归的形式添加结点，注意需要满足二叉排序树的要求
-	public void add(Node node) {
+	public void add(NodeA node) {
 		if (node == null) {
 			return;
 		}

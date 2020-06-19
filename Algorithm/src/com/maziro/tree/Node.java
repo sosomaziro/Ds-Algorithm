@@ -1,8 +1,6 @@
 package com.maziro.tree;
 
 public class Node {
-    public static final int LEFT = 0;
-    public static final int RIGHT = 1;
 
     public Node left;
     public Node right;
@@ -11,6 +9,9 @@ public class Node {
 
     public Node(int value) {
         this.value = value;
+        this.left = null;
+        this.right = null;
+        this.height = 0;
     }
 
     public void swapValue(Node node) {

@@ -1,49 +1,16 @@
 package com.maziro.tree;
 
-import com.maziro.sort.SortDemo;
-
 /**
  * inventors
  * Adelson-Velsky and Landis
  * AVL算法实现
  */
 public class AVLTree {
-    public static void main(String[] args) {
-//        int[] a = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-        int[] a = SortDemo.getRandomArray(20000);
-        AVLTree tree = new AVLTree();
-        for (int i : a) {
-            tree.add(i);
-        }
-        System.out.println("root = " + tree.root);
-        tree.remove(13);
-        tree.remove(12);
-        tree.remove(14);
-        tree.remove(10);
-        tree.remove(11);
-        tree.remove(16);
-        tree.remove(15);
-        tree.remove(9);
-        System.out.println("root = " + tree.root);
-        System.out.println("height = " + tree.getHeight(tree.root));
-        System.out.println("left = " + tree.getHeight(tree.root.left));
-        System.out.println("right = " + tree.getHeight(tree.root.right));
-    }
 
     Node root;
-    long size;
+    int size;
 
     public AVLTree() {
-    }
-
-    /**
-     * 获取节点高度
-     *
-     * @param node
-     * @return
-     */
-    public int getHeight(Node node) {
-        return node == null ? 0 : Math.max(getHeight(node.left), getHeight(node.right)) + 1;
     }
 
     /**
@@ -74,55 +41,65 @@ public class AVLTree {
      * @param value
      */
     public void add(int value) {
-        size++;
-        add(root, value);
+        root = add(root, value);
     }
 
-    private void add(Node node, int value) {
-        if (root == null) {
-            root = new Node(value);
-            return;
-        }
-        if (node.value == value) {
-            size--;
-            return;
-        } else if (node.value > value) {
-            if (node.left == null) {
-                node.left = new Node(value);
-            } else {
-                add(node.left, value);
-            }
-        } else {
-            if (node.right == null) {
-                node.right = new Node(value);
-            } else {
-                add(node.right, value);
-            }
-        }
-        balanceCheck(node);
-    }
-
-    private void balanceCheck(Node node) {
+    private Node add(Node node, int value) {
         if (node == null) {
-            return;
+            size++;
+            return new Node(value);
+        } else if (node.value > value) {
+            node.left = add(node.left, value);
+        } else if (node.value < value) {
+            node.right = add(node.right, value);
         }
         //计算平衡因子
         int balanceFactor = getBalanceFactor(node);
         if (balanceFactor > 1) {
-            if (node.left != null && getHeight(node.left.right) > getHeight(node.left.left)) {
+            if (getBalanceFactor(node.left) < 0) {
                 // 左旋 node.left
-                leftRotate(node.left);
+                node.left = leftRotate(node.left);
             }
             // 右旋 node
-            rightRotate(node);
+            return rightRotate(node);
         } else if (balanceFactor < -1) {
-            if (node.right != null && getHeight(node.right.left) > getHeight(node.right.right)) {
+            if (getBalanceFactor(node.right) > 0) {
                 // 右旋 node.right
-                rightRotate(node.right);
+                node.right = rightRotate(node.right);
             }
             // 左旋 node
-            leftRotate(node);
+            return leftRotate(node);
         }
+        return node;
+    }
+
+    //获取某一结点的高度
+    int getHeight(Node node) {
+        return node == null ? 0 : node.height;
+    }
+
+    private Node balanceCheck(Node node) {
+        if (node == null) {
+            return node;
+        }
+        //计算平衡因子
+        int balanceFactor = getBalanceFactor(node);
+        if (balanceFactor > 1) {
+            if (getBalanceFactor(node.left) < 0) {
+                // 左旋 node.left
+                node.left = leftRotate(node.left);
+            }
+            // 右旋 node
+            return rightRotate(node);
+        } else if (balanceFactor < -1) {
+            if (getBalanceFactor(node.right) > 0) {
+                // 右旋 node.right
+                node.right = rightRotate(node.right);
+            }
+            // 左旋 node
+            return leftRotate(node);
+        }
+        return node;
     }
 
     private int getBalanceFactor(Node node) {
@@ -134,15 +111,18 @@ public class AVLTree {
      *
      * @param node
      */
-    public void leftRotate(Node node) {
-        Node toLeft = new Node(node.value);
-        toLeft.left = node.left;
-        node.left = toLeft;
-        if (node.right != null) {
-            toLeft.right = node.right.left;
-            node.value = node.right.value;
-            node.right = node.right.right;
-        }
+    public Node leftRotate(Node t) {
+        Node r = t.right;
+        Node rl = r.left;
+        r.left = t;
+        t.right = rl;
+        updateHeight(t);
+        updateHeight(r);
+        return r;
+    }
+
+    private void updateHeight(Node node) {
+        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
     }
 
     /**
@@ -150,15 +130,14 @@ public class AVLTree {
      *
      * @param node
      */
-    public void rightRotate(Node node) {
-        Node toRight = new Node(node.value);
-        toRight.right = node.right;
-        node.right = toRight;
-        if (node.left != null) {
-            toRight.left = node.left.right;
-            node.value = node.left.value;
-            node.left = node.left.left;
-        }
+    public Node rightRotate(Node t) {
+        Node l = t.left;
+        Node lr = l.right;
+        l.right = t;
+        t.left = lr;
+        updateHeight(t);
+        updateHeight(l);
+        return l;
     }
 
     /**
