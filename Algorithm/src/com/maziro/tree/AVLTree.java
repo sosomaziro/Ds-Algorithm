@@ -128,10 +128,11 @@ public class AVLTree {
      * 删除
      */
     public void remove(int value) {
-        remove(root, null, value);
+        Node target = search(value);
+        root = remove(root, target);
     }
 
-    private void remove(Node node, Node parent, int value) {
+    private Node remove(Node node, Node target) {
         if (node == null) {
             return;
         }
