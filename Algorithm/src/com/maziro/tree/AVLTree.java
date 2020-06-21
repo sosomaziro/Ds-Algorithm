@@ -1,5 +1,8 @@
 package com.maziro.tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * inventors
  * Adelson-Velsky and Landis
@@ -106,6 +109,7 @@ public class AVLTree {
     }
 
     private void updateHeight(Node node) {
+        if (node != null)
         node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
     }
 
@@ -129,73 +133,65 @@ public class AVLTree {
      */
     public void remove(int value) {
         Node target = search(value);
-        root = remove(root, target);
+        if (target != null) {
+            size--;
+            root = remove(root, target);
+        }
     }
 
     private Node remove(Node node, Node target) {
         if (node == null) {
-            return;
+            return null;
         }
-        if (node.value > value) {
-            remove(node.left, node, value);
-        } else if (node.value == value) {
-            remove(node, parent);
+        if (node == target) {
+            node = doRemove(node);
+//            updateHeight(node);
+        } else if (node.value > target.value) {
+            node.left = remove(node.left, target);
         } else {
-            remove(node.right, node, value);
+            node.right = remove(node.right, target);
         }
-        balanceCheck(node);
+        updateHeight(node);
+        return balanceCheck(node);
     }
 
-    private void remove(Node node, Node parent) {
-        if (root.left == null && root.right == null) {
-            size--;
-            root = null;
+    private Node doRemove(Node node) {
+        if(node.left == null && node.right == null) {
+            return null;
         } else if (node.left != null && node.right != null) {
             Node min = getMin(node.right);
             int value = min.value;
-            remove(min, getParent(node, min));
+            node.right = remove(node.right, min);
             node.value = value;
-        } else {
-            size--;
-            if (node.left != null) {
-                if (node == root) {
-                    root = root.left;
-                } else {
-                    if (parent.left == node) {
-                        parent.left = node.left;
-                    } else {
-                        parent.right = node.left;
-                    }
-                }
-            } else {
-                if (node == root) {
-                    root = root.right;
-                } else {
-                    if (parent.left == node) {
-                        parent.left = node.right;
-                    } else {
-                        parent.right = node.right;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 获取父节点
-     */
-    private Node getParent(Node node, Node target) {
-        if (node.left == target || node.right == target) {
             return node;
-        } else if (node.value > target.value) {
-            return getParent(node.left, target);
         } else {
-            return getParent(node.right, target);
+            if (node.left != null) {
+                return node.left;
+            } else {
+                return node.right;
+            }
         }
     }
 
     private Node getMin(Node node) {
         return node.left == null ? node : getMin(node.left);
+    }
+
+    /**
+     * 遍历
+     */
+    public List<Integer> getAll() {
+        List<Integer> all = new ArrayList<>(size);
+        getAll(root, all);
+        return all;
+    }
+
+    public void getAll(Node node, List<Integer> all) {
+        if (node != null) {
+            getAll(node.left, all);
+            all.add(node.value);
+            getAll(node.right, all);
+        }
     }
 
 }

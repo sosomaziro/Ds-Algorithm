@@ -1,6 +1,9 @@
 package com.maziro.tree;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("ALL")
 public class AVLTreeStandard {
 
@@ -207,15 +210,32 @@ public class AVLTreeStandard {
         }
         //LR
         if (balanceFactor > 1 && getBalanceFactor(retNode.left) < 0) {
-            node.left = leftRotate(retNode.left);
+            retNode.left = leftRotate(retNode.left);
             return rightRotate(retNode);
         }
         //RL
         if (balanceFactor < -1 && getBalanceFactor(retNode.right) > 0) {
-            node.right = rightRotate(retNode.right);
+            retNode.right = rightRotate(retNode.right);
             return leftRotate(retNode);
         }
         return retNode;
+    }
+
+    /**
+     * 遍历
+     */
+    public List<Integer> getAll() {
+        List<Integer> all = new ArrayList<>(size);
+        getAll(root, all);
+        return all;
+    }
+
+    public void getAll(Node node, List<Integer> all) {
+        if (node != null) {
+            getAll(node.left, all);
+            all.add(node.value);
+            getAll(node.right, all);
+        }
     }
 
 }

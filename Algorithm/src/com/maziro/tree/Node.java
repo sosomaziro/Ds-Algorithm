@@ -12,7 +12,7 @@ public class Node {
         this.value = value;
         this.left = null;
         this.right = null;
-        this.height = 0;
+        this.height = 1;
     }
 
     public void swapValue(Node node) {
