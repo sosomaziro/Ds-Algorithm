@@ -4,9 +4,10 @@ public class KnapsackProblem {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] w = {1, 4, 3};//物品的重量
-		int[] val = {1500, 3000, 2000}; //物品的价值 这里val[i] 就是前面讲的v[i]
-		int m = 4; //背包的容量
+//		int[] w = {1, 4, 3};//物品的重量
+		int[] w = {1, 4, 3, 5,6,7,8};//物品的重量
+		int[] val = {1500, 3000, 2000, 4000, 5000, 3000, 7500}; //物品的价值 这里val[i] 就是前面讲的v[i]
+		int m = 12; //背包的容量
 		int n = val.length; //物品的个数
 		
 		
@@ -74,7 +75,7 @@ public class KnapsackProblem {
 		int j = path[0].length - 1;  //列的最大下标
 		while(i > 0 && j > 0 ) { //从path的最后开始找
 			if(path[i][j] == 1) {
-				System.out.printf("第%d个商品放入到背包\n", i); 
+				System.out.printf("put %d\n", i);
 				j -= w[i-1]; //w[i-1]
 			}
 			i--;
