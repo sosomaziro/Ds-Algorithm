@@ -1,8 +1,9 @@
 package com.atguigu.horse;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class HorseChessboard {
 
@@ -50,9 +51,13 @@ public class HorseChessboard {
 		//row = 4 X = 8 column = 4 = 4 * 8 + 4 = 36
 		visited[row * X + column] = true; //标记该位置已经访问
 		//获取当前位置可以走的下一个位置的集合 
-		ArrayList<Point> ps = next(new Point(column, row));
+		List<Point> ps = next(new Point(column, row));
 		//对ps进行排序,排序的规则就是对ps的所有的Point对象的下一步的位置的数目，进行非递减排序
 		sort(ps);
+//		ps = ps.stream().filter(p->!visited[p.y * X + p.x]).collect(Collectors.toList());
+//		if (ps.size() < 1) {
+//			System.out.println("get last step = " + step);
+//		}
 		//遍历 ps
 		while(!ps.isEmpty()) {
 			Point p = ps.remove(0);//取出下一个可以走的位置
@@ -121,7 +126,7 @@ public class HorseChessboard {
 	}
 
 	//根据当前这个一步的所有的下一步的选择位置，进行非递减排序, 减少回溯的次数
-	public static void sort(ArrayList<Point> ps) {
+	public static void sort(List<Point> ps) {
 		ps.sort(new Comparator<Point>() {
 
 			@Override
@@ -139,7 +144,7 @@ public class HorseChessboard {
 					return 1;
 				}
 			}
-			
+
 		});
 	}
 }
